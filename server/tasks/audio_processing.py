@@ -1,4 +1,3 @@
-from celery import Celery
 import asyncio
 import base64
 import io
@@ -6,6 +5,7 @@ from deepgram import DeepgramClient, PrerecordedOptions, FileSource
 import openai
 import elevenlabs
 from server.services.websocket_manager import ConnectionManager
+from server.services.celery_app import celery_app
 import os
 from dotenv import load_dotenv
 

@@ -1,7 +1,7 @@
-from celery import Celery
 import openai
 import os
 from dotenv import load_dotenv
+from server.services.celery_app import celery_app
 
 load_dotenv()
 
@@ -42,8 +42,13 @@ def analyze_cognitive_assessment(self, session_id: str, transcript: str):
         Transcript: "{transcript}"
         
         Provide a structured assessment with:
-        - Individual scores (1-10) for each area
-        - Specific observations
+        - Individual scores (1-10) for each area in this format:
+          Memory Score: X
+          Language Score: X  
+          Attention Score: X
+          Executive Score: X
+          Orientation Score: X
+        - Specific observations for each domain
         - Overall risk level (Low/Medium/High)
         - Recommendations
         """

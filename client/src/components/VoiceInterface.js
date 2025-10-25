@@ -37,6 +37,7 @@ const VoiceInterface = ({ onPageChange }) => {
     
     // Connect to WebSocket
     const websocket = new WebSocket(`ws://localhost:8000/ws/${newSessionId}`);
+    websocket.binaryType = 'arraybuffer';
     
     websocket.onopen = () => {
       setIsConnected(true);
@@ -44,17 +45,29 @@ const VoiceInterface = ({ onPageChange }) => {
     };
     
     websocket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      
-      if (data.type === 'ai_response') {
-        setConversation(prev => [...prev, {
-          type: 'assistant',
-          text: data.text,
-          timestamp: new Date()
-        }]);
-        setIsProcessing(false);
-      } else if (data.type === 'task_started') {
-        setIsProcessing(true);
+      try {
+        // Check if it's binary data (audio)
+        if (event.data instanceof ArrayBuffer) {
+          const audioData = new Uint8Array(event.data);
+          playAudio(audioData);
+          return;
+        }
+        
+        // Handle text messages
+        const data = JSON.parse(event.data);
+        
+        if (data.type === 'ai_response') {
+          setConversation(prev => [...prev, {
+            type: 'assistant',
+            text: data.text,
+            timestamp: new Date()
+          }]);
+          setIsProcessing(false);
+        } else if (data.type === 'task_started') {
+          setIsProcessing(true);
+        }
+      } catch (error) {
+        console.error('Error handling WebSocket message:', error);
       }
     };
     

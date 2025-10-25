@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 def test_environment():
     """Test environment configuration"""
-    print("🔍 Testing environment configuration...")
+    print("Testing environment configuration...")
     
     load_dotenv()
     
@@ -28,71 +28,71 @@ def test_environment():
             missing_vars.append(var)
     
     if missing_vars:
-        print(f"❌ Missing environment variables: {', '.join(missing_vars)}")
-        print("📝 Please check your .env file")
+        print(f"Missing environment variables: {', '.join(missing_vars)}")
+        print("Please check your .env file")
         return False
     
-    print("✅ Environment variables configured")
+    print("Environment variables configured")
     return True
 
 def test_redis_connection():
     """Test Redis connection"""
-    print("🔍 Testing Redis connection...")
+    print("Testing Redis connection...")
     
     try:
         import redis
         r = redis.from_url(os.getenv('REDIS_URL', 'redis://localhost:6379'))
         r.ping()
-        print("✅ Redis connection successful")
+        print("Redis connection successful")
         return True
     except Exception as e:
-        print(f"❌ Redis connection failed: {e}")
-        print("💡 Make sure Redis server is running")
+        print(f"Redis connection failed: {e}")
+        print("Make sure Redis server is running")
         return False
 
 def test_backend_api():
     """Test backend API"""
-    print("🔍 Testing backend API...")
+    print("Testing backend API...")
     
     try:
         response = requests.get('http://localhost:8000/health', timeout=5)
         if response.status_code == 200:
-            print("✅ Backend API is running")
+            print("Backend API is running")
             return True
         else:
-            print(f"❌ Backend API returned status {response.status_code}")
+            print(f"Backend API returned status {response.status_code}")
             return False
     except requests.exceptions.ConnectionError:
-        print("❌ Backend API is not running")
-        print("💡 Start the backend with: cd server && uvicorn main:app --reload")
+        print("Backend API is not running")
+        print("Start the backend with: cd server && uvicorn main:app --reload")
         return False
     except Exception as e:
-        print(f"❌ Backend API test failed: {e}")
+        print(f"Backend API test failed: {e}")
         return False
 
 def test_frontend():
     """Test frontend"""
-    print("🔍 Testing frontend...")
+    print("Testing frontend...")
     
     try:
         response = requests.get('http://localhost:3000', timeout=5)
         if response.status_code == 200:
-            print("✅ Frontend is running")
+            print("Frontend is running")
             return True
         else:
-            print(f"❌ Frontend returned status {response.status_code}")
+            print(f"Frontend returned status {response.status_code}")
             return False
     except requests.exceptions.ConnectionError:
-        print("❌ Frontend is not running")
-        print("💡 Start the frontend with: cd client && npm start")
+        print("Frontend is not running")
+        print("Start the frontend with: cd client && npm start")
         return False
     except Exception as e:
-        print(f"❌ Frontend test failed: {e}")
+        print(f"Frontend test failed: {e}")
         return False
 
 def main():
     """Run all tests"""
-    print("🧠 Dementia Detection AI - Setup Test")
+    print("Dementia Detection AI - Setup Test")
     print("=" * 50)
     
     tests = [
@@ -111,16 +111,16 @@ def main():
         print()
     
     print("=" * 50)
-    print(f"📊 Test Results: {passed}/{total} tests passed")
+    print(f"Test Results: {passed}/{total} tests passed")
     
     if passed == total:
-        print("🎉 All tests passed! System is ready to use.")
-        print("\n🚀 Access the application:")
+        print("All tests passed! System is ready to use.")
+        print("\nAccess the application:")
         print("   Frontend: http://localhost:3000")
         print("   Backend API: http://localhost:8000")
         print("   API Docs: http://localhost:8000/docs")
     else:
-        print("❌ Some tests failed. Please check the issues above.")
+        print("Some tests failed. Please check the issues above.")
         sys.exit(1)
 
 if __name__ == "__main__":

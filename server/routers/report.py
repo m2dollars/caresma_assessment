@@ -37,13 +37,24 @@ async def generate_report(request: ReportRequest):
         # Parse the AI response to extract structured data
         analysis = result.get("assessment", "")
         
-        # Extract scores and risk level (simplified parsing)
-        # In a real app, you'd use more sophisticated NLP parsing
-        memory_score = 7  # Extract from analysis
-        language_score = 8
-        attention_score = 6
-        executive_score = 7
-        orientation_score = 9
+        # Extract scores from AI analysis (simplified parsing)
+        # Parse the analysis text to extract scores
+        import re
+        
+        # Try to extract scores from the analysis text
+        score_pattern = r'(\w+)\s*[Ss]core[:\s]*(\d+)'
+        scores = {}
+        for match in re.finditer(score_pattern, analysis, re.IGNORECASE):
+            domain = match.group(1).lower()
+            score = int(match.group(2))
+            scores[domain] = score
+        
+        # Default scores if not found in analysis
+        memory_score = scores.get('memory', 7)
+        language_score = scores.get('language', 8)
+        attention_score = scores.get('attention', 6)
+        executive_score = scores.get('executive', 7)
+        orientation_score = scores.get('orientation', 9)
         
         # Calculate overall risk
         avg_score = (memory_score + language_score + attention_score + 
