@@ -11,6 +11,32 @@ A comprehensive system for early dementia detection using conversational AI, fea
 - **Database**: PostgreSQL
 - **Real-time**: WebSocket connections
 
+### **Code Structure Walkthrough (45 seconds)**
+*[Show file structure in IDE]*
+```
+server/
+├── main.py                 # FastAPI application
+├── services/
+│   ├── redis_client.py     # Redis connection
+│   ├── celery_app.py       # Job queue configuration
+│   └── websocket_manager.py # Real-time connections
+├── tasks/
+│   ├── audio_processing.py # Speech-to-text & TTS
+│   └── ai_processing.py    # Cognitive assessment
+└── routers/
+    ├── auth.py            # User authentication
+    ├── assessment.py      # Session management
+    └── report.py          # Report generation
+
+client/
+├── src/
+│   ├── App.js            # Main React app
+│   └── components/
+│       ├── VoiceInterface.js    # Voice interaction
+│       ├── ReportGenerator.js   # Assessment reports
+│       └── Navigation.js        # App navigation
+```
+
 ## 🚀 Quick Start
 
 ### Prerequisites
