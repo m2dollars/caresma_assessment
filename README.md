@@ -11,8 +11,7 @@ A comprehensive system for early dementia detection using conversational AI, fea
 - **Database**: PostgreSQL
 - **Real-time**: WebSocket connections
 
-### **Code Structure Walkthrough (45 seconds)**
-*[Show file structure in IDE]*
+### **Code Structure Walkthrough**
 ```
 server/
 ├── main.py                 # FastAPI application
