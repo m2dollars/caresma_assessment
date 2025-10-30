@@ -15,7 +15,6 @@ import {
   Divider,
   LinearProgress
 } from '@mui/material';
-import { motion } from 'framer-motion';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import axios from 'axios';
@@ -184,10 +183,14 @@ const ReportGenerator = ({ onPageChange }) => {
 
       {/* Report Display */}
       {report && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+        <Box
+          sx={{
+            animation: 'reportFadeIn 0.5s ease-out',
+            '@keyframes reportFadeIn': {
+              from: { opacity: 0, transform: 'translateY(20px)' },
+              to: { opacity: 1, transform: 'translateY(0)' }
+            }
+          }}
         >
           <Card>
             <CardContent>
@@ -286,7 +289,7 @@ const ReportGenerator = ({ onPageChange }) => {
               </Box>
             </CardContent>
           </Card>
-        </motion.div>
+        </Box>
       )}
     </Container>
   );

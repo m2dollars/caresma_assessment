@@ -26,6 +26,13 @@ const Navigation = ({ currentPage, setCurrentPage }) => {
           </Button>
           <Button
             color="inherit"
+            onClick={() => handleNavigation('doctor')}
+            variant={currentPage === 'doctor' ? 'outlined' : 'text'}
+          >
+            👨‍⚕️ AI Doctor
+          </Button>
+          <Button
+            color="inherit"
             onClick={() => handleNavigation('report')}
             variant={currentPage === 'report' ? 'outlined' : 'text'}
           >

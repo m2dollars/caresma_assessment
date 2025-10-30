@@ -24,10 +24,10 @@ class ConnectionManager:
             websocket = self.active_connections[session_id]
             await websocket.send_bytes(audio_data)
 
-    async def send_text_response(self, text: str, session_id: str):
+    async def send_text_response(self, text: str, session_id: str, is_user: bool = False):
         if session_id in self.active_connections:
             websocket = self.active_connections[session_id]
             await websocket.send_text(json.dumps({
-                "type": "ai_response",
+                "type": "user_transcript" if is_user else "ai_response",
                 "text": text
             }))

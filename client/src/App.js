@@ -7,6 +7,7 @@ import { Box } from '@mui/material';
 import VoiceInterface from './components/VoiceInterface';
 import ReportGenerator from './components/ReportGenerator';
 import Navigation from './components/Navigation';
+import DoctorAvatar from './components/DoctorAvatar';
 
 const theme = createTheme({
   palette: {
@@ -43,6 +44,14 @@ function App() {
               path="/" 
               element={
                 <VoiceInterface 
+                  onPageChange={setCurrentPage}
+                />
+              } 
+            />
+            <Route 
+              path="/doctor" 
+              element={
+                <DoctorAvatar 
                   onPageChange={setCurrentPage}
                 />
               } 

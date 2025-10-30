@@ -12,7 +12,6 @@ import {
   Avatar,
   Paper
 } from '@mui/material';
-import { motion, AnimatePresence } from 'framer-motion';
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
@@ -179,12 +178,15 @@ const VoiceInterface = ({ onPageChange }) => {
       {/* Avatar and Voice Controls */}
       <Card sx={{ mb: 3 }}>
         <CardContent sx={{ textAlign: 'center', py: 4 }}>
-          <motion.div
-            animate={{
-              scale: isListening ? 1.1 : 1,
-              rotate: isListening ? [0, 5, -5, 0] : 0
+          <Box
+            sx={{
+              animation: isListening ? 'wiggle 0.5s ease-in-out' : 'none',
+              '@keyframes wiggle': {
+                '0%, 100%': { transform: 'scale(1.1) rotate(0deg)' },
+                '25%': { transform: 'scale(1.1) rotate(5deg)' },
+                '75%': { transform: 'scale(1.1) rotate(-5deg)' }
+              }
             }}
-            transition={{ duration: 0.5 }}
           >
             <Avatar
               sx={{
@@ -193,12 +195,13 @@ const VoiceInterface = ({ onPageChange }) => {
                 mx: 'auto',
                 mb: 2,
                 bgcolor: isListening ? 'primary.main' : 'grey.300',
-                fontSize: '3rem'
+                fontSize: '3rem',
+                transition: 'all 0.3s ease'
               }}
             >
               🧠
             </Avatar>
-          </motion.div>
+          </Box>
 
           <Typography variant="h6" gutterBottom>
             {isListening ? "I'm listening..." : "Tap to speak"}
@@ -230,25 +233,35 @@ const VoiceInterface = ({ onPageChange }) => {
       </Card>
 
       {/* Conversation Display */}
-      <AnimatePresence>
-        {conversation.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-          >
-            <Card>
+      {conversation.length > 0 && (
+        <Box
+          sx={{
+            animation: 'slideIn 0.3s ease-out',
+            '@keyframes slideIn': {
+              from: { opacity: 0, transform: 'translateY(20px)' },
+              to: { opacity: 1, transform: 'translateY(0)' }
+            }
+          }}
+        >
+          <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
                   Conversation
                 </Typography>
                 <Box sx={{ maxHeight: 400, overflowY: 'auto' }}>
                   {conversation.map((message, index) => (
-                    <motion.div
+                    <Box
                       key={index}
-                      initial={{ opacity: 0, x: message.type === 'user' ? 50 : -50 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
+                      sx={{
+                        animation: 'messageSlide 0.3s ease-out',
+                        '@keyframes messageSlide': {
+                          from: { 
+                            opacity: 0, 
+                            transform: message.type === 'user' ? 'translateX(50px)' : 'translateX(-50px)'
+                          },
+                          to: { opacity: 1, transform: 'translateX(0)' }
+                        }
+                      }}
                     >
                       <Paper
                         sx={{
@@ -269,14 +282,13 @@ const VoiceInterface = ({ onPageChange }) => {
                           {message.timestamp.toLocaleTimeString()}
                         </Typography>
                       </Paper>
-                    </motion.div>
+                    </Box>
                   ))}
                 </Box>
               </CardContent>
             </Card>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        </Box>
+      )}
 
       {/* Hidden audio element for playback */}
       <audio ref={audioRef} style={{ display: 'none' }} />

@@ -104,6 +104,7 @@ npm start
 ### 6. Access the Application
 
 - **Frontend**: http://localhost:3000
+- **AI Doctor Avatar**: http://localhost:3000/doctor ⭐ NEW!
 - **Backend API**: http://localhost:8000
 - **API Docs**: http://localhost:8000/docs
 - **Celery Flower**: http://localhost:5555 (if using Docker)
@@ -122,6 +123,15 @@ docker-compose down
 ```
 
 ## 🎯 Features
+
+### 👨‍⚕️ AI Doctor Avatar (NEW!)
+- **Elderly-Friendly Interface**: Large text, simple controls, high contrast design
+- **Animated Doctor Avatar**: Professional doctor character with emotions and lip-sync
+- **Empathetic Conversation**: Warm, caring AI doctor personality specialized in geriatric care
+- **Natural Interaction**: Speak naturally with the AI doctor like a real consultation
+- **Real-time Feedback**: Visual indicators for listening, speaking, and processing
+- **Cognitive Assessment**: Gentle, conversational cognitive health evaluation
+- **Compassionate Care**: Designed specifically for elderly patients with patience and respect
 
 ### Voice Interface
 - **Real-time Speech-to-Text**: Using Deepgram API
@@ -149,6 +159,13 @@ docker-compose down
 ### Authentication
 - `POST /api/auth/register` - User registration
 - `POST /api/auth/login` - User login
+
+### 👨‍⚕️ Doctor Avatar (NEW)
+- `POST /api/doctor/start-session` - Start doctor conversation session
+- `POST /api/doctor/conversation` - Process conversation with AI doctor
+- `GET /api/doctor/session/{session_id}` - Get doctor session details
+- `POST /api/doctor/session/{session_id}/end` - End session and generate assessment
+- `GET /api/doctor/conversation-starters` - Get conversation prompts
 
 ### Assessment
 - `POST /api/assessment/start` - Start new session

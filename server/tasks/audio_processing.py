@@ -42,10 +42,16 @@ def process_audio(self, session_id: str, audio_data: bytes):
         
         transcript = response.results.channels[0].alternatives[0].transcript
         
-        # Step 2: Send transcript for AI processing
-        process_ai_response.delay(session_id, transcript)
+        # Step 2: Process AI response and wait for completion
+        ai_task = process_ai_response.delay(session_id, transcript)
+        ai_result = ai_task.get(timeout=30)
         
-        return {"status": "success", "transcript": transcript}
+        return {
+            "status": "success", 
+            "transcript": transcript,
+            "user_transcript": transcript,
+            "response": ai_result.get("response", "")
+        }
         
     except Exception as exc:
         # Retry with exponential backoff
@@ -53,42 +59,38 @@ def process_audio(self, session_id: str, audio_data: bytes):
 
 @celery_app.task(bind=True, max_retries=3)
 def process_ai_response(self, session_id: str, transcript: str):
-    """Process transcript through GPT-4 and generate response"""
+    """Process transcript through GPT-4 and generate response using Dr. Smith personality"""
     try:
-        # GPT-4 conversation and cognitive assessment
+        # Import Doctor personality
+        from server.tasks.doctor_conversation import DOCTOR_SYSTEM_PROMPT
+        
+        # GPT-4 conversation with Dr. Smith personality for elderly care
         response = openai.ChatCompletion.create(
             model="gpt-4",
             messages=[
                 {
                     "role": "system",
-                    "content": """You are a compassionate AI assistant designed to help assess cognitive health in elderly users. 
-                    Your role is to:
-                    1. Engage in natural conversation
-                    2. Subtly assess cognitive functions (memory, attention, language, executive function)
-                    3. Be empathetic and supportive
-                    4. Ask age-appropriate questions
-                    5. Respond naturally and conversationally
-                    
-                    Current conversation context: This is a cognitive health assessment session."""
+                    "content": DOCTOR_SYSTEM_PROMPT
                 },
                 {
                     "role": "user",
                     "content": transcript
                 }
             ],
-            max_tokens=200,
+            max_tokens=150,  # Keep responses short for elderly patients
             temperature=0.7
         )
         
         ai_response = response.choices[0].message.content
         
-        # Send text response to frontend
-        asyncio.create_task(manager.send_text_response(ai_response, session_id))
-        
-        # Step 3: Convert to speech
+        # Step 3: Convert to speech with elderly-friendly voice
         generate_speech.delay(session_id, ai_response)
         
-        return {"status": "success", "response": ai_response}
+        return {
+            "status": "success", 
+            "response": ai_response,
+            "user_transcript": transcript
+        }
         
     except Exception as exc:
         raise self.retry(exc=exc, countdown=60 * (2 ** self.request.retries))
